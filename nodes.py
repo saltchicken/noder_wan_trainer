@@ -9,8 +9,6 @@ from datetime import datetime
 from io import BytesIO
 from PIL import Image
 
-from backend.node_utils import CaptionedVideo, CaptionedImage, Node
-
 
 class Node:
     def __init__(self):
