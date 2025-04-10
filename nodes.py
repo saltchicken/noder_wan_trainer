@@ -9,20 +9,6 @@ from datetime import datetime
 from io import BytesIO
 from PIL import Image
 
-from dataclasses import dataclass
-
-
-@dataclass
-class CaptionedImage:
-    image: str
-    caption: str
-
-
-@dataclass
-class CaptionedVideo:
-    video: str
-    caption: str
-
 
 class Node:
     def __init__(self):
