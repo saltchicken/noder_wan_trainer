@@ -27,7 +27,16 @@ class RealWanTrainer(Node):
         diffusion_pipe_dir = self.widgets[
             2
         ]  # { "type": "text", "value": "/home/saltchicken/.local/diffusion-pipe"}
-        status = self.widgets[3]  # {"type": "textarea", "value": ""}
+        resolution = self.widgets[3] # { "type": "dropdown", "options": [256, 512]}
+        num_repeats = self.widgets[4] # { "type": "slider", "min": 0, "max": 10, "step": 1, "value": 5 }
+        epochs = self.widgets[5] # { "type": "slider", "min": 100, "max": 1000, "step": 1, "value": 100 }
+        warmup_steps = self.widgets[6] # { "type": "slider", "min": 10, "max": 100, "step": 1, "value": 100 }
+        save_every_n_epochs = self.widgets[7] # { "type": "slider", "min": 0, "max": 50, "step": 1, "value": 10 }
+        video_clip_mode = self.widgets[8] # { "type": "dropdown", "options": ["single_middle", "single_beginning" ]}
+
+
+
+        status = self.widgets[9]  # {"type": "textarea", "value": ""}
         output_dir_dataset_input = os.path.join(base_output_dir, output_dir, "input")
 
         if os.path.exists(os.path.join(base_output_dir, output_dir)):
@@ -58,7 +67,7 @@ class RealWanTrainer(Node):
             )
             save_captioned_videos(videos, output_dir_dataset_input)
 
-        dataset_config = create_dataset_toml(output_dir_dataset_input)
+        dataset_config = create_dataset_toml(directory_path=output_dir_dataset_input, resolutions=[resolution], num_repeats=num_repeats)
 
         # Write the TOML file
         data_set_toml_path = os.path.join(base_output_dir, output_dir, "dataset.toml")
@@ -69,6 +78,10 @@ class RealWanTrainer(Node):
             output_dir=os.path.join(base_output_dir, output_dir, "output"),
             dataset_path=data_set_toml_path,
             model_ckpt_path=path_to_wan_video,
+            epochs=epochs,
+            warmup_steps=warmup_steps,
+            video_clip_mode=video_clip_mode,
+            save_every_n_epochs=save_every_n_epochs,
         )
 
         video_toml_path = os.path.join(base_output_dir, output_dir, "wan_video.toml")
@@ -243,6 +256,7 @@ def create_wan_video_toml(
     eval_every_n_epochs: int = 1,
     save_every_n_epochs: int = 5,
     checkpoint_every_n_minutes: int = 30,
+    video_clip_mode: str = "single_middle",
     model_ckpt_path: str = "/path/to/Wan2.1-T2V-14B-480P",
     learning_rate: float = 2e-5,
     weight_decay: float = 0.01,
@@ -291,7 +305,7 @@ def create_wan_video_toml(
         "save_dtype": "bfloat16",
         "caching_batch_size": 1,
         "steps_per_print": 1,
-        "video_clip_mode": "single_middle",
+        "video_clip_mode": video_clip_mode,
         "model": {
             "type": "wan",
             "ckpt_path": model_ckpt_path,
