@@ -10,44 +10,7 @@ from io import BytesIO
 from PIL import Image
 
 
-class Node:
-    def __init__(self):
-        self.instantiated = True
-        self.node_id = None
-        print(f"Node initialized {self.__class__.__name__}")
-        self.widgets = []
-        self.websocket = None
-
-    async def send_message(self, message_type: str, data: dict):
-        if self.websocket:
-            await self.websocket.send_json(
-                {
-                    "type": "node_message",
-                    "data": {
-                        "nodeId": self.node_id,
-                        "message": {"type": message_type, "data": data},
-                    },
-                }
-            )
-
-    async def set_status(self, status):
-        """Update node's running status"""
-        await self.send_message("status", status)
-
-    async def update_widget(self, widget_name, value):
-        """Update a widget's value during node execution"""
-        await self.send_message("widget_update", {"name": widget_name, "value": value})
-
-    async def run(self, *args, **kwargs) -> Any:
-        pass
-
-    async def _run(self, *args, **kwargs):
-        await self.set_status("run_start")
-        result = await self.run(*args, **kwargs)
-        await self.set_status("run_complete")
-        if isinstance(result, (tuple, list)):
-            return result
-        return [result] if result is not None else []
+OUTPUT_DIR = "../user/output"
 
 
 class RealWanTrainer(Node):
@@ -59,7 +22,7 @@ class RealWanTrainer(Node):
         # TODO: Handle if nothing is passed to the input
 
         # Create output directory if it doesn't exist
-        base_output_dir = os.path.join("output")
+        base_output_dir = os.path.join(OUTPUT_DIR)
         output_dir = self.widgets[0]
         path_to_wan_video = self.widgets[1]
         diffusion_pipe_dir = self.widgets[2]
