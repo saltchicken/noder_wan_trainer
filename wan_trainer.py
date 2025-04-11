@@ -20,8 +20,13 @@ class RealWanTrainer(Node):
         # Create output directory if it doesn't exist
         base_output_dir = os.path.join(self.output_dir)
         output_dir = self.widgets[0]
-        path_to_wan_video = self.widgets[1]
-        diffusion_pipe_dir = self.widgets[2]
+        # TODO: Need to set the default values for path_to_wan_video and diffusion_pipe_dir with env variables
+        path_to_wan_video = self.widgets[
+            1
+        ]  # { "type": "text", "value": "/home/saltchicken/.local/diffusion-pipe/models/Wan2.1-T2V-14B-480P"}
+        diffusion_pipe_dir = self.widgets[
+            2
+        ]  # { "type": "text", "value": "/home/saltchicken/.local/diffusion-pipe"}
         status = self.widgets[3]  # {"type": "textarea", "value": ""}
         output_dir_dataset_input = os.path.join(base_output_dir, output_dir, "input")
 
