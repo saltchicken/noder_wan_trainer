@@ -1,16 +1,12 @@
-from typing import Tuple, Union, List, Any
+from typing import Union, List
 import asyncio
 import os
 import toml
-
 
 import base64
 from datetime import datetime
 from io import BytesIO
 from PIL import Image
-
-
-OUTPUT_DIR = "../user/output"
 
 
 class RealWanTrainer(Node):
@@ -22,7 +18,7 @@ class RealWanTrainer(Node):
         # TODO: Handle if nothing is passed to the input
 
         # Create output directory if it doesn't exist
-        base_output_dir = os.path.join(OUTPUT_DIR)
+        base_output_dir = os.path.join(self.output_dir)
         output_dir = self.widgets[0]
         path_to_wan_video = self.widgets[1]
         diffusion_pipe_dir = self.widgets[2]
